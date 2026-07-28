@@ -1,0 +1,354 @@
+/* ============================================================
+   ESTILOS COMPLETOS PARA LA APP DE SENTADILLAS
+   ============================================================ */
+
+/* ===== RESET Y BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: #0a0e17;
+    color: white;
+    overflow: hidden;
+    height: 100vh;
+    touch-action: none;
+}
+
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ===== VENTANA DE LA CÁMARA ===== */
+#video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(-1);
+}
+
+/* ===== HUD - INFORMACIÓN EN PANTALLA ===== */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#counter-box {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    padding: 12px 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+    min-width: 100px;
+}
+
+#counter-box .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+#counter-box .number {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#counter-box .sub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#status-box {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    padding: 10px 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+    min-width: 90px;
+}
+
+#status-box .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+#status-box .value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* ===== ESTADOS ===== */
+.status-correct { color: #00e676; }
+.status-incorrect { color: #ff1744; }
+.status-waiting { color: #ffab00; }
+.status-loading { color: #00d4ff; }
+.status-error { color: #ff1744; }
+
+/* ===== ÁNGULO ===== */
+#angle-display {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    padding: 8px 20px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 10;
+    pointer-events: none;
+    text-align: center;
+}
+
+#angle-display .angle-value {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.angle-good { color: #00e676; }
+.angle-bad { color: #ff1744; }
+
+/* ===== CONTROLES ===== */
+#controls {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#controls button {
+    pointer-events: auto;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    touch-action: manipulation;
+    min-width: 120px;
+}
+
+#btn-start {
+    background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+    color: white;
+    box-shadow: 0 8px 30px rgba(123, 47, 252, 0.4);
+}
+
+#btn-start:active {
+    transform: scale(0.95);
+}
+
+#btn-start:disabled {
+    opacity: 0.4;
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+#btn-stop {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+#btn-stop:active {
+    transform: scale(0.95);
+}
+
+#btn-stop.hidden {
+    display: none;
+}
+
+/* ===== CONFIGURACIÓN ===== */
+#config {
+    position: absolute;
+    bottom: 100px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
+    pointer-events: none;
+    min-width: 120px;
+}
+
+#config label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+#config input {
+    pointer-events: auto;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+}
+
+#config input:focus {
+    border-color: #7b2ffc;
+}
+
+/* ===== MODAL ===== */
+#modal {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 40px;
+    text-align: center;
+}
+
+#modal.show {
+    display: flex;
+}
+
+#modal .emoji {
+    font-size: 72px;
+    margin-bottom: 16px;
+}
+
+#modal h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+#modal p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+#modal .stats {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 12px;
+}
+
+#modal button {
+    margin-top: 24px;
+    padding: 14px 48px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ===== LOG DE DEPURACIÓN ===== */
+#debug-log {
+    position: absolute;
+    bottom: 180px;
+    left: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    font-family: monospace;
+    color: rgba(255, 255, 255, 0.7);
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#debug-log .log-entry {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#debug-log .log-entry:last-child {
+    border-bottom: none;
+}
+
+.log-error { color: #ff1744; }
+.log-success { color: #00e676; }
+.log-info { color: #00d4ff; }
+.log-warning { color: #ffab00; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    #counter-box .number { font-size: 32px; }
+    #status-box { min-width: 70px; padding: 8px 12px; }
+    #controls button { padding: 12px 20px; font-size: 14px; min-width: 90px; }
+    #config { bottom: 90px; right: 10px; min-width: 90px; padding: 12px; }
+    #config input { font-size: 14px; padding: 6px 8px; }
+    #debug-log { bottom: 160px; font-size: 10px; max-height: 80px; }
+}

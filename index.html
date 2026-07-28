@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>💪 Contador de Sentadillas con IA</title>
+    
+    <!-- Favicon en línea -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>" />
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="container">
+        <!-- ===== VISTA DE CÁMARA ===== -->
+        <div id="video-container">
+            <video id="video" playsinline autoplay muted></video>
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <!-- ===== HUD SUPERIOR ===== -->
+        <div id="hud">
+            <div id="counter-box">
+                <div class="label">Repeticiones</div>
+                <div class="number" id="rep-count">0</div>
+                <div class="sub" id="target-display">/ 10</div>
+            </div>
+            <div id="status-box">
+                <div class="label">Estado</div>
+                <div class="value status-waiting" id="status-text">⏳ Iniciar</div>
+            </div>
+        </div>
+
+        <!-- ===== ÁNGULO ===== -->
+        <div id="angle-display">
+            <div>Ángulo Rodilla</div>
+            <div class="angle-value angle-good" id="angle-value">--°</div>
+        </div>
+
+        <!-- ===== CONFIGURACIÓN ===== -->
+        <div id="config">
+            <label>🎯 Objetivo</label>
+            <input type="number" id="target-input" value="10" min="1" max="100" />
+        </div>
+
+        <!-- ===== CONTROLES ===== -->
+        <div id="controls">
+            <button id="btn-start">▶ Iniciar</button>
+            <button id="btn-stop" class="hidden">⏹ Detener</button>
+        </div>
+
+        <!-- ===== LOG DE DEPURACIÓN ===== -->
+        <div id="debug-log">
+            <div class="log-entry log-info">📱 App iniciada - Esperando acción...</div>
+        </div>
+
+        <!-- ===== MODAL DE FINALIZACIÓN ===== -->
+        <div id="modal">
+            <div class="emoji">🏆</div>
+            <h2>¡Entrenamiento completado!</h2>
+            <p id="modal-message">Has completado todas las repeticiones</p>
+            <div class="stats" id="modal-stats">Válidas: 0 | Fallidas: 0</div>
+            <button id="modal-btn">🔄 Volver a empezar</button>
+        </div>
+    </div>
+
+    <!-- ===== LIBRERÍAS EXTERNAS ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.9/wasm/vision_bundle.js">
+    </script>
+
+    <!-- ===== SCRIPTS PROPIOS (orden correcto) ===== -->
+    <script src="sound.js"></script>
+    <script src="pose-detector.js"></script>
+    <script src="squat-logic.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

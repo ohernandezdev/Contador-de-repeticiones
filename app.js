@@ -47,6 +47,11 @@ const POSE_CONNECTIONS = [
 
 // ===== CÁMARA =====
 async function startCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        logMessage('❌ Esta página necesita HTTPS (o localhost) para usar la cámara', 'error');
+        return false;
+    }
+
     try {
         cameraStream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },

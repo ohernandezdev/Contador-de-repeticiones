@@ -207,7 +207,7 @@ body {
     transform: scale(0.95);
 }
 
-#btn-stop.hidden {
+.hidden {
     display: none;
 }
 
@@ -312,7 +312,7 @@ body {
 /* ===== LOG DE DEPURACIÓN ===== */
 #debug-log {
     position: absolute;
-    bottom: 180px;
+    bottom: 198px;
     left: 20px;
     right: 20px;
     background: rgba(0, 0, 0, 0.8);
@@ -343,12 +343,66 @@ body {
 .log-info { color: #00d4ff; }
 .log-warning { color: #ffab00; }
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE (vertical / retrato) ===== */
 @media (max-width: 480px) {
     #counter-box .number { font-size: 32px; }
     #status-box { min-width: 70px; padding: 8px 12px; }
     #controls button { padding: 12px 20px; font-size: 14px; min-width: 90px; }
     #config { bottom: 90px; right: 10px; min-width: 90px; padding: 12px; }
     #config input { font-size: 14px; padding: 6px 8px; }
-    #debug-log { bottom: 160px; font-size: 10px; max-height: 80px; }
+
+    #angle-display { bottom: 92px; padding: 6px 16px; }
+    #angle-display .angle-value { font-size: 22px; }
+
+    #debug-log { bottom: 172px; font-size: 10px; max-height: 64px; }
+}
+
+/* ===== RESPONSIVE (horizontal / apaisado) =====
+   En horizontal la altura de pantalla es muy chica y los offsets pensados
+   para vertical hacen que todo se amontone o se salga de la pantalla.
+   Se reubican los elementos en las 4 esquinas para que no se pisen. */
+@media (orientation: landscape) and (max-height: 500px) {
+    #hud { top: 8px; padding: 0 12px; }
+    #counter-box { padding: 6px 14px; min-width: 70px; }
+    #counter-box .label { font-size: 9px; }
+    #counter-box .number { font-size: 24px; }
+    #status-box { padding: 6px 12px; min-width: 70px; }
+    #status-box .label { font-size: 9px; }
+    #status-box .value { font-size: 13px; }
+
+    /* Config: esquina superior derecha, debajo del estado */
+    #config {
+        top: 64px;
+        bottom: auto;
+        right: 16px;
+        min-width: 76px;
+        padding: 8px 12px;
+    }
+    #config label { font-size: 10px; margin-bottom: 2px; }
+    #config input { font-size: 13px; padding: 5px 8px; }
+
+    /* Ángulo: esquina inferior izquierda */
+    #angle-display {
+        left: 16px;
+        bottom: 8px;
+        transform: none;
+        padding: 5px 14px;
+    }
+    #angle-display div:first-child { font-size: 11px; }
+    #angle-display .angle-value { font-size: 18px; }
+
+    /* Controles: centrados abajo, mas compactos */
+    #controls { bottom: 8px; gap: 10px; }
+    #controls button { padding: 8px 18px; font-size: 12px; min-width: 64px; }
+
+    /* Log: esquina inferior derecha, compacto */
+    #debug-log {
+        left: auto;
+        right: 16px;
+        bottom: 8px;
+        width: min(240px, 38vw);
+        max-height: 90px;
+        font-size: 9px;
+        padding: 6px 8px;
+    }
 }

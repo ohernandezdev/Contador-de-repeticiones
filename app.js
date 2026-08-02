@@ -110,6 +110,17 @@ function drawSkeleton(landmarks) {
     });
 }
 
+// Suaviza el ángulo promediando los últimos frames, para no saltar cuando
+// el detector cambia de pierna preferida de un frame a otro.
+const ANGLE_SMOOTHING_WINDOW = 3;
+let recentAngles = [];
+
+function smoothAngle(angle) {
+    recentAngles.push(angle);
+    if (recentAngles.length > ANGLE_SMOOTHING_WINDOW) recentAngles.shift();
+    return recentAngles.reduce((sum, a) => sum + a, 0) / recentAngles.length;
+}
+
 // ===== LOOP DE DETECCIÓN =====
 async function detectionLoop() {
     if (!squatCounter.state.isRunning) return;
@@ -137,9 +148,9 @@ async function detectionLoop() {
         }
 
         if (leg) {
-            const angle = poseDetector.calculateAngle(leg.hip, leg.knee, leg.ankle);
+            const rawAngle = poseDetector.calculateAngle(leg.hip, leg.knee, leg.ankle);
             const confidence = Math.min(leg.hip.visibility, leg.knee.visibility, leg.ankle.visibility);
-            squatCounter.processAngle(angle, confidence);
+            squatCounter.processAngle(smoothAngle(rawAngle), confidence);
         }
     } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -152,15 +163,17 @@ async function detectionLoop() {
 squatCounter.setCallbacks({
     onRepComplete: (repCount, total) => {
         repCountEl.textContent = repCount;
+        angleValueEl.classList.add('angle-good');
+        angleValueEl.classList.remove('angle-bad');
         sound.playCorrect();
     },
     onRepInvalid: () => {
+        angleValueEl.classList.add('angle-bad');
+        angleValueEl.classList.remove('angle-good');
         sound.playIncorrect();
     },
     onAngleUpdate: (angle) => {
         angleValueEl.textContent = `${Math.round(angle)}°`;
-        angleValueEl.classList.toggle('angle-good', angle < POSE_CONFIG.ANGLE_THRESHOLD_DOWN || angle > POSE_CONFIG.ANGLE_THRESHOLD_UP);
-        angleValueEl.classList.toggle('angle-bad', !(angle < POSE_CONFIG.ANGLE_THRESHOLD_DOWN || angle > POSE_CONFIG.ANGLE_THRESHOLD_UP));
     },
     onStatusUpdate: (text, className) => {
         statusTextEl.textContent = text;
@@ -197,6 +210,8 @@ async function beginSession() {
     }
 
     sound.playStart();
+    recentAngles = [];
+    logMessage('💡 Tip: coloca el celular de lado para medir mejor la profundidad', 'info');
     const target = parseInt(targetInput.value, 10) || 10;
     targetDisplayEl.textContent = `/ ${target}`;
     squatCounter.startSession(target);

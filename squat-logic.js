@@ -89,13 +89,14 @@ class SquatCounter {
             // Detectando bajada
             if (angle < POSE_CONFIG.ANGLE_THRESHOLD_DOWN && !this.state.isDown) {
                 this.state.isDown = true;
+                this.state.repPhase = 'down';
                 this.state.repStartTime = now;
                 this.state.lastValidAngle = angle;
                 this._updateStatus('⬇️ Bajando...', 'status-waiting');
                 logMessage(`⬇️ Bajando: ${Math.round(angle)}°`, 'info');
             }
-
-            // Detectando subida (fin de repetición)
+        } else {
+            // repPhase === 'down': detectando subida (fin de repetición)
             if (this.state.isDown && angle > POSE_CONFIG.ANGLE_THRESHOLD_UP) {
                 this._completeRepetition(now);
             }

@@ -7,7 +7,7 @@
  * Configuración del detector de poses
  */
 const POSE_CONFIG = {
-    ANGLE_THRESHOLD_DOWN: 100,  // Ángulo para "bajada completa"
+    ANGLE_THRESHOLD_DOWN: 90,   // Ángulo para "bajada completa" (paralelo o más profundo)
     ANGLE_THRESHOLD_UP: 155,    // Ángulo para "de pie"
     MIN_REP_TIME: 600,          // Tiempo mínimo por repetición (ms)
     MAX_REP_TIME: 5000,         // Tiempo máximo por repetición (ms)
